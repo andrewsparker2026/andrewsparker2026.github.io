@@ -5,7 +5,7 @@ title: "Notes & Talks"
 This page collects some notes, project reports, and talks that I have written or presented over time. I will continue adding material here as it becomes ready.
 
 - **The Ax-Grothendieck Theorem**  
-  *Coming soon*
+  [PDF](/pdfs/ax-grothendieck-notes.pdf)
 
 - **Cyclotomy: The Story of How Gauss Narrowly Missed Becoming a Philologist**  
   [PDF](/pdfs/cyclotomy.pdf)

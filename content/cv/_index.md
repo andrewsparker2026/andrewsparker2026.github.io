@@ -47,6 +47,11 @@ title: "Curriculum Vitae"
 
 ## Talks & Presentations
 
+- **The Ax-Grothendieck Theorem: From Infinite Fields to Finite Fields**
+  - *Venue:* Math Club, ISI Kolkata
+  - *Date:* September 2026
+  - [Video](https://www.youtube.com/watch?v=uqKY6tLh3eE) · [Slides](/pdfs/ax-grothendieck-slides.pdf)
+
 - **An Exposition of Monsky's Theorem**
   - *Venue:* Limit Camp, ISI Bangalore
   - *Date:* May 2026
@@ -54,10 +59,12 @@ title: "Curriculum Vitae"
 - **Cyclotomy: The Story of How Gauss Narrowly Missed Becoming a Philologist**
   - *Venue:* Math Club, ISI Bangalore
   - *Date:* August 2025
+  - [Video](https://www.youtube.com/watch?v=Pld9ezLKRUs)
 
 - **Relation between Class Groups of Binary Quadratic Forms and Ideal Class Groups in Quadratic Fields**
   - *Presentation associated with the project on Arithmetic Theory of Binary Quadratic Forms*
-  - ISI Kolkata, 2024
+  - *Venue:* ISI Kolkata, 2024
+  - *Date:* July 2024
 
 ## We might have met at…
 
