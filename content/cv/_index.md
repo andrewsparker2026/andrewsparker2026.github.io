@@ -26,7 +26,6 @@ title: "Curriculum Vitae"
   - *Timeline:* May 2025 – June 2025
   - *Main reference:*
     - Jean-Pierre Serre, *Local Fields*
-  - *Report:* *A Journey through Local Class Field Theory*
 
 - **Sheaf Theory**
   - *Advisor:* Prof. Suresh Nayak, ISI Bangalore
