@@ -1,42 +1,456 @@
+<style>
+  .site-palette-heading {
+    margin: 0.9rem 0 0.35rem;
+    padding: 0 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  .site-palette-item {
+    list-style: none;
+    margin: 0.15rem 0;
+  }
+
+  .site-palette-link,
+  .site-palette-action {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.45rem;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .site-palette-link:hover,
+  .site-palette-action:hover {
+    background: rgba(127, 127, 127, 0.12);
+  }
+
+  .site-palette-action {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    font: inherit;
+  }
+
+  .site-palette-meta {
+    flex: 0 0 auto;
+    font-size: 0.72rem;
+    opacity: 0.5;
+    white-space: nowrap;
+  }
+</style>
+
 <script>
 (function () {
-  function setupSearchShortcut() {
-    const searchButton = document.getElementById("search-button");
+  /*
+   * Published content pages.
+   * New blog posts, gallery posts, teaching pages, etc. are added
+   * automatically by Hugo.
+   */
+  const sitePages = [
+    {{- range site.RegularPages.ByTitle }}
+    {
+      title: {{ .Title | plainify | jsonify | safeJS }},
+      href: {{ .RelPermalink | jsonify | safeJS }},
+      section: {{ .Section | jsonify | safeJS }}
+    },
+    {{- end }}
+  ];
 
-    if (!searchButton) {
-      console.log("Search button not found");
-      return;
+  /*
+   * Main navigation.
+   * New menu entries (for example Teaching) appear automatically.
+   */
+  const navigationPages = [
+    {{- range site.Menus.main }}
+    {
+      label: {{ .Name | jsonify | safeJS }},
+      href: {{ .URL | jsonify | safeJS }}
+    },
+    {{- end }}
+  ];
+
+  /*
+   * Rendered section content used only to discover resource links.
+   */
+  const notesTalksHTML =
+    {{- with site.GetPage "/notes-talks" }}
+      {{ .Content | jsonify | safeJS }}
+    {{- else }}
+      ""
+    {{- end }};
+
+  const cvHTML =
+    {{- with site.GetPage "/cv" }}
+      {{ .Content | jsonify | safeJS }}
+    {{- else }}
+      ""
+    {{- end }};
+
+  function setupSearchPalette() {
+    const searchButton = document.getElementById("search-button");
+    const searchButtonMobile = document.getElementById("search-button-mobile");
+    const searchInput = document.getElementById("search-query");
+    const searchResults = document.getElementById("search-results");
+
+    if (!searchInput || !searchResults) return;
+
+    /* Ctrl/Cmd + K badge beside the desktop search icon. */
+    if (searchButton && !document.getElementById("search-shortcut-label")) {
+      const shortcut = document.createElement("span");
+      shortcut.id = "search-shortcut-label";
+      shortcut.textContent =
+        navigator.platform.toUpperCase().includes("MAC") ? "⌘ K" : "Ctrl K";
+      shortcut.style.fontSize = "12px";
+      shortcut.style.marginLeft = "6px";
+      shortcut.style.padding = "2px 6px";
+      shortcut.style.border = "1px solid currentColor";
+      shortcut.style.borderRadius = "5px";
+      shortcut.style.opacity = "0.65";
+      shortcut.style.whiteSpace = "nowrap";
+      searchButton.appendChild(shortcut);
     }
 
-    // Add the keyboard shortcut label beside the search icon
-    const shortcut = document.createElement("span");
-    shortcut.textContent =
-      navigator.platform.toUpperCase().includes("MAC") ? "⌘ K" : "Ctrl K";
+    function sectionHeading(text) {
+      const li = document.createElement("li");
+      li.className = "site-palette-heading";
+      li.textContent = text;
+      return li;
+    }
 
-    shortcut.style.fontSize = "12px";
-    shortcut.style.marginLeft = "6px";
-    shortcut.style.padding = "2px 6px";
-    shortcut.style.border = "1px solid currentColor";
-    shortcut.style.borderRadius = "5px";
-    shortcut.style.opacity = "0.65";
-    shortcut.style.whiteSpace = "nowrap";
+    function makeLink(label, href, meta) {
+      const li = document.createElement("li");
+      li.className = "site-palette-item";
 
-    searchButton.appendChild(shortcut);
+      const a = document.createElement("a");
+      a.className = "site-palette-link";
+      a.href = href;
 
-    // Ctrl+K on Windows/Linux and Cmd+K on Mac
+      const title = document.createElement("span");
+      title.textContent = label;
+      a.appendChild(title);
+
+      if (meta) {
+        const small = document.createElement("span");
+        small.className = "site-palette-meta";
+        small.textContent = meta;
+        a.appendChild(small);
+      }
+
+      li.appendChild(a);
+      return li;
+    }
+
+    function makeAction(label, action, meta) {
+      const li = document.createElement("li");
+      li.className = "site-palette-item";
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "site-palette-action";
+
+      const title = document.createElement("span");
+      title.textContent = label;
+      button.appendChild(title);
+
+      if (meta) {
+        const small = document.createElement("span");
+        small.className = "site-palette-meta";
+        small.textContent = meta;
+        button.appendChild(small);
+      }
+
+      button.addEventListener("click", action);
+      li.appendChild(button);
+      return li;
+    }
+
+    function niceSectionName(section) {
+      if (!section) return "Page";
+
+      const names = {
+        "blog": "Blog",
+        "gallery": "Gallery",
+        "teaching": "Teaching",
+        "notes-talks": "Notes"
+      };
+
+      if (names[section]) return names[section];
+
+      return section
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, function (c) {
+          return c.toUpperCase();
+        });
+    }
+
+    function getNavigationLinks() {
+      const links = [];
+      const seen = new Set();
+
+      navigationPages.forEach(function (item) {
+        if (!item.href) return;
+
+        let url;
+        try {
+          url = new URL(item.href, window.location.origin);
+        } catch (_) {
+          return;
+        }
+
+        if (url.origin !== window.location.origin) return;
+        if (url.pathname === "/") return;
+        if (seen.has(url.pathname)) return;
+
+        seen.add(url.pathname);
+        links.push({
+          label: item.label,
+          href: url.pathname + url.search + url.hash
+        });
+      });
+
+      return links;
+    }
+
+    function parseHTML(html) {
+      if (!html) return null;
+      return new DOMParser().parseFromString(html, "text/html");
+    }
+
+    /*
+     * Long written notes/reports:
+     * every PDF linked from Notes & Talks is discovered automatically.
+     */
+    function getNotesResources() {
+      const doc = parseHTML(notesTalksHTML);
+      if (!doc) return [];
+
+      const resources = [];
+      const seen = new Set();
+
+      doc.querySelectorAll("a[href]").forEach(function (a) {
+        const href = a.getAttribute("href");
+        if (!href || seen.has(href)) return;
+        if (!href.toLowerCase().includes(".pdf")) return;
+
+        let title = "";
+        let li = a.closest("li");
+
+        while (li && !title) {
+          const strong = li.querySelector(":scope > strong, :scope > p > strong");
+          if (strong) title = strong.textContent.trim();
+          li = li.parentElement ? li.parentElement.closest("li") : null;
+        }
+
+        const type = a.textContent.trim() || "PDF";
+
+        seen.add(href);
+        resources.push({
+          title: title || type,
+          href: href,
+          type: type
+        });
+      });
+
+      return resources;
+    }
+
+    /*
+     * Talk resources:
+     * YouTube/video and slide PDF links in the CV are discovered automatically.
+     */
+    function getCVResources() {
+      const doc = parseHTML(cvHTML);
+      if (!doc) return [];
+
+      const resources = [];
+      const seen = new Set();
+
+      doc.querySelectorAll("a[href]").forEach(function (a) {
+        const href = a.getAttribute("href");
+        if (!href || seen.has(href)) return;
+
+        const lowerHref = href.toLowerCase();
+        const linkText = a.textContent.trim();
+        const lowerText = linkText.toLowerCase();
+
+        const isYouTube =
+          lowerHref.includes("youtube.com") ||
+          lowerHref.includes("youtu.be");
+
+        const isSlideLink =
+          lowerHref.includes(".pdf") &&
+          (lowerText.includes("slide") || lowerHref.includes("slide"));
+
+        const isVideoLink =
+          isYouTube ||
+          lowerText.includes("video") ||
+          lowerText.includes("recording");
+
+        if (!isSlideLink && !isVideoLink) return;
+
+        let title = "";
+        let li = a.closest("li");
+
+        while (li && !title) {
+          const strong = li.querySelector(":scope > strong, :scope > p > strong");
+          if (strong) title = strong.textContent.trim();
+          li = li.parentElement ? li.parentElement.closest("li") : null;
+        }
+
+        const type =
+          linkText ||
+          (isYouTube ? "Video" : "Slides");
+
+        seen.add(href);
+        resources.push({
+          title: title || "Talk",
+          href: href,
+          type: type
+        });
+      });
+
+      return resources;
+    }
+
+    function appendSection(title, items, renderer) {
+      if (!items.length) return;
+      searchResults.appendChild(sectionHeading(title));
+      items.forEach(renderer);
+    }
+
+    function renderPalette() {
+      if (searchInput.value.trim() !== "") return;
+
+      searchResults.innerHTML = "";
+
+      /* 1. Navigation */
+      const navigation = getNavigationLinks();
+      appendSection("Navigation", navigation, function (item) {
+        searchResults.appendChild(
+          makeLink(item.label, item.href, "Page")
+        );
+      });
+
+      /* 2. Actions — intentionally near the top. */
+      searchResults.appendChild(sectionHeading("Actions"));
+
+      searchResults.appendChild(
+        makeAction(
+          "Change theme",
+          function () {
+            const switcher =
+              document.getElementById("appearance-switcher") ||
+              document.getElementById("appearance-switcher-mobile");
+
+            if (switcher) switcher.click();
+          },
+          "Light / Dark"
+        )
+      );
+
+      searchResults.appendChild(
+        makeLink("Go to homepage", "/", "Home")
+      );
+
+      searchResults.appendChild(
+        makeLink(
+          "Email Arkapriyo",
+          "mailto:arkapriyoisibang@gmail.com",
+          "Contact"
+        )
+      );
+
+      /* 3. Talk videos/slides from the CV. */
+      const cvResources = getCVResources();
+      appendSection("Talks & Presentations", cvResources, function (resource) {
+        searchResults.appendChild(
+          makeLink(resource.title, resource.href, resource.type)
+        );
+      });
+
+      /* 4. Long notes/reports from Notes & Talks. */
+      const notes = getNotesResources();
+      appendSection("Notes", notes, function (resource) {
+        searchResults.appendChild(
+          makeLink(resource.title, resource.href, resource.type)
+        );
+      });
+
+      /* 5. Every published regular page, kept last. */
+      appendSection("Pages & Posts", sitePages, function (page) {
+        searchResults.appendChild(
+          makeLink(
+            page.title,
+            page.href,
+            niceSectionName(page.section)
+          )
+        );
+      });
+    }
+
+    /*
+     * Blowfish opens/clears the search modal itself.
+     * Rendering twice makes our empty-state palette robust to that timing,
+     * while the input check prevents it from overwriting typed searches.
+     */
+    function renderAfterOpen() {
+      window.setTimeout(renderPalette, 80);
+      window.setTimeout(renderPalette, 280);
+    }
+
+    if (searchButton) {
+      searchButton.addEventListener("click", renderAfterOpen);
+    }
+
+    if (searchButtonMobile) {
+      searchButtonMobile.addEventListener("click", renderAfterOpen);
+    }
+
+    searchInput.addEventListener("focus", function () {
+      if (searchInput.value.trim() === "") {
+        window.setTimeout(renderPalette, 80);
+      }
+    });
+
+    /*
+     * Normal Blowfish search remains untouched.  If the visitor erases
+     * the query, the discovery palette comes back.
+     */
+    searchInput.addEventListener("input", function () {
+      if (searchInput.value.trim() === "") {
+        window.setTimeout(renderPalette, 0);
+      }
+    });
+
     document.addEventListener("keydown", function (event) {
-      if ((event.ctrlKey || event.metaKey) &&
-          event.key.toLowerCase() === "k") {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key.toLowerCase() === "k"
+      ) {
         event.preventDefault();
-        searchButton.click();
+
+        const button = searchButton || searchButtonMobile;
+        if (button) {
+          button.click();
+          renderAfterOpen();
+        }
       }
     });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", setupSearchShortcut);
+    document.addEventListener("DOMContentLoaded", setupSearchPalette);
   } else {
-    setupSearchShortcut();
+    setupSearchPalette();
   }
 })();
 </script>
