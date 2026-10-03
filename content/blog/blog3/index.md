@@ -9,11 +9,11 @@ showComments: true
 ---
 {{< katex >}}
 
-A down to earth introduction to Kummer theory :
+We present a down to earth introduction to Kummer theory :
 
-The purpose of this note is to understand a very classical question: **Can we describe cyclic extensions of a field explicitly by adjoining roots?** For quadratic extensions this is familiar: if \(\operatorname{char}(F)\neq2\), then a quadratic extension has the form \(F(\sqrt a)\). Kummer theory explains the higher-degree analogue, why roots of unity enter the picture, and how the whole story can be expressed naturally using Galois cohomology.
+The purpose of this blog is to understand a very classical question: **Can we describe cyclic extensions of a field explicitly by adjoining roots?** For quadratic extensions this is familiar: if \(\operatorname{char}(F)\neq2\), then a quadratic extension has the form \(F(\sqrt a)\). Kummer theory explains the higher-degree analogue, why roots of unity enter the picture, and how the whole story can be expressed naturally using Galois cohomology.
 
-Before getting there, let us begin with a small fact about tensor products and composita of fields.
+Before getting there, let us begin with a small fact about tensor products and composita of fields. This don't have any connection with rest of our blog but I thought to include it anyways.
 
 ## 1. A warm-up: when is \(L\otimes_F K\) a field?
 
@@ -124,9 +124,9 @@ Iterating,
 \[
 \sigma^i(\theta)=\zeta_n^i\theta.
 \]
-Since \(\zeta_n\) is primitive, these \(n\) elements are distinct. Hence the stabilizer of \(\theta\) in \(\operatorname{Gal}(K/F)\) is trivial. By the Fundamental Theorem of Galois Theory,
+Since \(\zeta_n\) is primitive, these \(n\) elements are distinct. This shows that the order of \(\theta\) is n and the stabilizer of \(\theta\) in \(\operatorname{Gal}(K/F)\) is trivial. By the Fundamental Theorem of Galois Theory,
 \[
-[K:F(\theta)]=|\operatorname{Stab}(\theta)|=1,
+[K:F(\theta)]=|\operatorname{Gal}(K/F)|=|\operatorname{Stab}(\theta)|=1,
 \]
 so \(K=F(\theta)\).
 
@@ -180,7 +180,7 @@ Assume \((\operatorname{char}(F),n)=1\). Then the \(n\)-th power map is surjecti
 1\longrightarrow\mu_n\longrightarrow(F^s)^\times\xrightarrow{(\cdot)^n}(F^s)^\times\longrightarrow1.
 \]
 
-One way of viewing Galois cohomology is as the sequence of derived functors of the invariants functor \(M\mapsto M^{G_F}\). Equivalently,
+One way of viewing Galois cohomology is as the sequence of right derived functors of the invariants functor \(M\mapsto M^{G_F}\). Equivalently,
 \[
 H^i(G_F,M)\simeq\operatorname{Ext}^i_{\mathbf Z[G_F]}(\mathbf Z,M).
 \]
@@ -227,7 +227,7 @@ which is precisely the \(1\)-cocycle condition. Therefore
 \[
 \delta(a)=[c_a].
 \]
-The connecting homomorphism is thus extremely concrete: it records how Galois automorphisms move an \(n\)-th root of \(a\).
+The connecting homomorphism records how Galois automorphisms move an \(n\)-th root of \(a\).
 
 ## 7. When \(\mu_n\subset F\)
 
@@ -250,7 +250,7 @@ Combining this with Kummer theory,
 
 ## 8. The kernel of the Kummer character
 
-Let \(a\in F^\times\), choose \(\alpha\) such that \(\alpha^n=a\), and consider
+Let \(a\in F^\times\), choose \(\alpha\) such that \(\alpha^n=a\), and consider the Kummer character
 \[
 c_a:G_F\longrightarrow\mu_n,\qquad c_a(\sigma)=\frac{\sigma(\alpha)}{\alpha}.
 \]
@@ -274,7 +274,163 @@ Hence
 \[
 \operatorname{Gal}(F(\alpha)/F)\simeq\operatorname{im}(c_a),
 \]
-so \(F(\alpha)/F\) is cyclic of degree dividing \(n\).
+so \(F(\alpha)/F\) is cyclic of degree dividing \(n\). Thus, when \(\mu_n\subset F\), we have
+
+Thus, when \(\mu_n\subset F\), we have \(F^\times/(F^\times)^n \cong H^1(G_F,\mu_n)=\operatorname{Hom}_{\mathrm{cont}}(G_F,\mu_n)\).
+
+Hence every class
+
+\[
+[a]\in F^\times/(F^\times)^n
+\]
+
+determines a continuous Kummer character
+
+\( c_a:G_F\longrightarrow\mu_n, \qquad c_a(\sigma)= \frac{\sigma(\sqrt[n]{a})}{\sqrt[n]{a}}\).
+
+Its kernel determines a cyclic extension of \(F\), namely
+
+\[
+(F^s)^{\ker(c_a)}= F(\sqrt[n]{a}),
+\]
+
+and
+
+\[
+\operatorname{Gal}(F(\sqrt[n]{a})/F)
+\cong
+G_F/\ker(c_a)
+\cong
+\operatorname{im}(c_a)
+\subseteq
+\mu_n.
+\]
+
+Thus every Kummer class gives rise to a cyclic extension of degree dividing \(n\).
+
+Conversely, suppose that \(K/F\) is a cyclic extension of degree \(m\), where \(m\mid n\). Then
+
+\[
+\operatorname{Gal}(K/F)
+\cong
+\mathbf Z/m\mathbf Z.
+\]
+
+Since \(\mu_n\subset F\), we also have
+
+\[
+\mu_m\subseteq\mu_n.
+\]
+
+After choosing a generator of \(\operatorname{Gal}(K/F)\), we obtain a noncanonical isomorphism
+
+\[
+\varphi:
+\operatorname{Gal}(K/F)
+\xrightarrow{\sim}
+\mu_m.
+\]
+
+Let
+
+\[
+\pi: G_F \longrightarrow \operatorname{Gal}(K/F)
+\]
+
+be the natural quotient map, and let
+
+\[
+\iota:
+\mu_m
+\hookrightarrow
+\mu_n
+\]
+
+be the natural inclusion. Composing these maps gives a continuous homomorphism
+
+\[
+\chi=\iota\circ\varphi\circ\pi:G_F\longrightarrow \mu_n.
+\]
+
+The construction may be summarized by the commutative diagram
+
+\[
+\begin{array}{ccc}
+G_F
+& \xrightarrow{\;\pi\;}
+& \operatorname{Gal}(K/F)
+\\[6pt]
+{\scriptstyle \chi}\downarrow
+&&
+\downarrow{\scriptstyle \varphi}
+\\[6pt]
+\mu_n
+& \xleftarrow{\;\iota\;}
+& \mu_m .
+\end{array}
+\]
+
+Since both \(\varphi\) and \(\iota\) are injective,
+
+\[\ker(\chi)=\ker(\pi)= \operatorname{Gal}(F^s/K).
+\]
+
+Therefore the fixed field of \(\ker(\chi)\) is precisely \(K\).
+
+But
+
+\[
+\operatorname{Hom}_{\mathrm{cont}}(G_F,\mu_n)
+\cong
+F^\times/(F^\times)^n.
+\]
+
+Hence the character \(\chi\) corresponds to some class
+
+\[
+[a]\in F^\times/(F^\times)^n.
+\]
+
+The Kummer extension associated to this class is therefore
+
+\[K=F(\sqrt[n]{a}).
+\]
+
+Thus every cyclic extension of degree \(m\mid n\) arises from a class in
+
+\[
+F^\times/(F^\times)^n.
+\]
+
+There is, however a noncanonicity. The isomorphism
+
+\[
+\operatorname{Gal}(K/F)
+\xrightarrow{\sim}
+\mu_m
+\]
+
+depends on the choice of a generator of the cyclic group \(\operatorname{Gal}(K/F)\). Different choices therefore give different Kummer characters, and hence possibly different classes in
+
+\[
+F^\times/(F^\times)^n,
+\]
+
+but all of these characters have the same kernel
+
+\[
+\operatorname{Gal}(F^s/K).
+\]
+
+Thus the field extension \(K/F\) is naturally determined not by a single Kummer class, but by the cyclic subgroup generated by that class.
+
+In this sense, when \(\mu_n\subset F\), cyclic subgroups of order \(m\mid n\) in
+
+\[
+F^\times/(F^\times)^n
+\]
+
+correspond to cyclic extensions of \(F\) of degree \(m\).
 
 ## 9. Why do we look at \(F^\times/(F^\times)^n\)?
 
@@ -296,7 +452,7 @@ F^\times/(F^\times)^n
 \]
 appears.
 
-But there is a second subtlety. Different elements of \(F^\times/(F^\times)^n\) can still give the same field. For example, if \([a]\) has order \(m\), then the elements
+As we noted earler different elements of \(F^\times/(F^\times)^n\) can still give the same field. For example, if \([a]\) has order \(m\), then the elements
 \[
 [a]^r,\qquad (r,m)=1,
 \]
@@ -347,7 +503,7 @@ where \(\mathbf Z/n\mathbf Z\) carries the trivial \(G_F\)-action. When \(\mu_n\
 \]
 and the two descriptions coincide. When \(\mu_n\not\subset F\), they do not.
 
-### The torsor picture
+### The torsor motivation
 
 For \(a\in F^\times\), let
 \[
@@ -391,9 +547,9 @@ is \(1\), so changing the chosen root does not change the cocycle at all. The or
 \]
 Thus \(c_a\) is an honest character \(G_F\to\mu_n\).
 
-At the same time, once \(F\) already contains \(\mu_n\), adjoining one root \(\alpha\) automatically gives all the roots \(\zeta\alpha\). Hence \(F(\alpha)\) is the splitting field of \(X^n-a\); since the polynomial is separable, \(F(\alpha)/F\) is Galois, and its Galois group is cyclic. This is why, when \(\mu_n\subset F\), the torsor picture and the cyclic-field picture line up so neatly.
+At the same time, once \(F\) already contains \(\mu_n\), adjoining one root \(\alpha\) automatically gives all the roots \(\zeta\alpha\). Hence \(F(\alpha)\) is the splitting field of \(X^n-a\); since the polynomial is separable, \(F(\alpha)/F\) is Galois, and its Galois group is cyclic. This is why, when \(\mu_n\subset F\), the torsor motivation and the cyclic-field picture line up.
 
-If \(\mu_n\not\subset F\), the torsor still exists perfectly well, but the field generated by one chosen root need not contain the other roots. For example,
+If \(\mu_n\not\subset F\), the torsor still exists, but the field generated by one chosen root need not contain the other roots. For example,
 \[
 F=\mathbf Q,\qquad n=3,\qquad a=2.
 \]
@@ -448,7 +604,7 @@ X^p-X-a
 \]
 play in characteristic \(p\) the role played by \(X^n-a\) in Kummer theory.
 
-## 12. From cyclic extensions to Kummer extensions
+## 12. From cyclic to Kummer extensions
 
 So far we have essentially studied one radical at a time. Kummer theory naturally allows us to adjoin many radicals simultaneously.
 
@@ -468,13 +624,13 @@ whose classes generate \(D\), and define
 \[
 K_D=F\left(\sqrt[n]{a_1},\ldots,\sqrt[n]{a_r}\right).
 \]
-Such an extension is an \(n\)-Kummer extension. Since every individual radical extension is Galois and cyclic of degree dividing \(n\), their compositum \(K_D/F\) is a finite abelian Galois extension whose Galois group has exponent dividing \(n\).
+Such an extension is an \(n\)-Kummer extension. Since every individual radical extension is Galois and cyclic of degree dividing \(n\), their compositum \(K_D/F\) is a finite abelian Galois extension whose Galois group has exponent annihilated by \(n\).
 
-## 13. A small duality lemma
+## 13. A duality lemma
 
 Let \(A\) be a finite abelian group of exponent dividing \(n\). Put
 \[
-A^\vee=\operatorname{Hom}(A,\mathbf Z/n\mathbf Z).
+A^\vee=\operatorname{Hom}_{\mathbf Z}(A,\mathbf Z/n\mathbf Z).
 \]
 There is a natural map
 \[
@@ -484,21 +640,55 @@ given by evaluation:
 \[
 a\longmapsto\bigl(\chi\longmapsto\chi(a)\bigr).
 \]
-For finite abelian \(A\) of exponent dividing \(n\), this map is an isomorphism:
+For finite abelian \(A\), this map is an isomorphism:
 \[
 \boxed{A\simeq A^{\vee\vee}.}
 \]
 
-There is also a natural isomorphism
+The bilinear pairing
+
 \[
-\mu_n\otimes_{\mathbf Z/n\mathbf Z}A^\vee
+\mu_n\times \operatorname{Hom}_{\mathbf Z}(A,\mathbf Z/n\mathbf Z)
+\longrightarrow
+\operatorname{Hom}_{\mathbf Z}(A,\mu_n)
+\]
+
+is given by
+
+\[
+(\zeta,\chi)
+\longmapsto
+\left(
+a\longmapsto \zeta^{\chi(a)}
+\right).
+\]
+
+Equivalently, for \(\zeta\in\mu_n\), \(\chi\in\operatorname{Hom}_{\mathbf Z}(A,\mathbf Z/n\mathbf Z)\), and \(a\in A\),
+
+\[\langle \zeta,\chi\rangle(a)=\zeta^{\chi(a)}.
+\]
+
+Since this pairing is \(\mathbf Z\)-bilinear, it induces a homomorphism
+
+\[
+\mu_n\otimes_{\mathbf Z}
+\operatorname{Hom}_{\mathbf Z}(A,\mathbf Z/n\mathbf Z)
+\longrightarrow
+\operatorname{Hom}_{\mathbf Z}(A,\mu_n).
+\]
+
+This induces a natural linear isomorphism for abelian groups whose exponent is annihilated by \(n\) 
+\[
+\mu_n\otimes_{\mathbf Z}A^\vee
 \longrightarrow\operatorname{Hom}(A,\mu_n),
 \]
-given explicitly by
+(as \(\mathbf Z\)-modules)given explicitly by
 \[
 \zeta\otimes\chi\longmapsto\bigl(a\longmapsto\zeta^{\chi(a)}\bigr).
 \]
 After choosing a primitive \(n\)-th root \(\zeta_n\), we may identify \(\mu_n\simeq\mathbf Z/n\mathbf Z\), but the formulation above keeps the roots of unity visible, which is exactly what we want for the Kummer pairing.
+
+
 
 ## 14. The Kummer pairing
 
@@ -617,6 +807,189 @@ D\longrightarrow\operatorname{Hom}(\operatorname{Gal}(K_D/F),\mu_n),
 \left(\sigma\mapsto\frac{\sigma(\sqrt[n]{a})}{\sqrt[n]{a}}\right).
 \]
 
+The first isomorphism thus gives the assignment
+
+\[
+D\longmapsto K_D
+\]
+
+a bijection between subgroups
+
+\[
+(K^\times)^n\subseteq D\subseteq K^\times
+\]
+
+such that \(D/(K^\times)^n\) is finite, and finite abelian extensions \(L/K\) whose Galois groups are annihilated by \(n\), i.e.
+
+\[
+n\cdot\operatorname{Gal}(L/K)=0.
+\]
+
+Equivalently,
+
+\[
+\boxed{
+\left\{
+\begin{array}{c}
+D\subseteq K^\times,\ (K^\times)^n\subseteq D,\\
+D/(K^\times)^n\text{ finite}
+\end{array}
+\right\}
+\;\longleftrightarrow\;
+\left\{
+\begin{array}{c}
+\text{finite abelian extensions }L/K\\
+\text{of exponent dividing }n
+\end{array}
+\right\}.
+}
+\]
+
+The correspondence is given by
+
+\[D\longmapsto K_D=K\bigl(\sqrt[n]{a}:a\in D\bigr).
+\]
+
+Now since \(G=\operatorname{Gal}(K_D/F)\) has exponent dividing \(n\), we have
+
+\[
+\operatorname{Hom}_{\mathbf Z}(G,\mu_n)
+\cong
+\mu_n\otimes_{\mathbf Z}G^\vee,
+\]
+
+where
+
+\[
+G^\vee=\operatorname{Hom}_{\mathbf Z}(G,\mathbf Z/n\mathbf Z).
+\]
+
+After choosing a primitive \(n\)-th root of unity, we obtain a noncanonical identification
+
+\[
+\mu_n\cong\mathbf Z/n\mathbf Z.
+\]
+
+Since \(G^\vee\) is annihilated by \(n\),
+
+\[
+\mu_n\otimes_{\mathbf Z}G^\vee
+\cong
+(\mathbf Z/n\mathbf Z)\otimes_{\mathbf Z}G^\vee
+\cong
+G^\vee.
+\]
+
+Hence
+
+\[
+\boxed{\operatorname{Hom}_{\mathbf Z}(G,\mu_n) \cong G^\vee.}
+\]
+
+Applying this to the Kummer pairing, we obtain
+
+\[
+D
+\cong
+\operatorname{Hom}_{\mathbf Z}(G,\mu_n)
+\cong
+G^\vee.
+\]
+
+Therefore \(D\) and \(G\) have the same cardinality, and in particular
+
+\[
+\boxed{[K_D:F]=|\operatorname{Gal}(K_D/F)|=|G|=|D|.}
+\]
+
+Let
+
+\(A=K^\times/(K^\times)^n\)
+
+and let
+
+\(K_n=K(\sqrt[n]{a}:a\in K^\times)\)
+
+be the maximal \(n\)-Kummer extension of \(K\). Assume throughout that \((n,\operatorname{char}K)=1\) and \(\mu_n\subset K\).
+
+From the Kummer exact sequence we obtained
+
+\(K^\times/(K^\times)^n\cong H^1(G_K,\mu_n)\).
+
+Since the action of \(G_K\) on \(\mu_n\) is trivial, this becomes
+
+\(K^\times/(K^\times)^n\cong\operatorname{Hom}_{\mathrm{cont}}(G_K,\mu_n)\).
+
+For \(a\in K^\times\), the corresponding character is
+
+\(c_a(\sigma)=\dfrac{\sigma(\sqrt[n]{a})}{\sqrt[n]{a}}\).
+
+The subgroup fixing \(K_n\) is precisely the intersection of the kernels of all these Kummer characters:
+
+\(G_{K_n}=\bigcap_{a\in K^\times}\ker(c_a)\).
+
+Hence every Kummer character factors through the quotient
+
+\(G_K/G_{K_n}=\operatorname{Gal}(K_n/K)\),
+
+and therefore
+
+\(K^\times/(K^\times)^n
+\cong
+\operatorname{Hom}_{\mathrm{cont}}(\operatorname{Gal}(K_n/K),\mu_n)\).
+
+Conversely, the Kummer pairing
+
+\(\operatorname{Gal}(K_n/K)\times K^\times/(K^\times)^n\longrightarrow\mu_n\),
+
+given by
+
+\((\sigma,[a])\longmapsto
+\dfrac{\sigma(\sqrt[n]{a})}{\sqrt[n]{a}}\),
+
+gives the dual description
+
+\(\operatorname{Gal}(K_n/K)
+\cong
+\operatorname{Hom}_{\mathbf Z}(K^\times/(K^\times)^n,\mu_n)\).
+
+Now recall the natural isomorphism discussed above. 
+Apply this with
+
+\(B=K^\times/(K^\times)^n\).
+
+Since \(B\) is \(n\)-torsion, we have \(nB=0\), and hence \(B^\vee\) is also \(n\)-torsion. After choosing a primitive \(n\)-th root of unity, we obtain a noncanonical identification
+
+\(\mu_n\cong\mathbf Z/n\mathbf Z\).
+
+Therefore
+
+\(\mu_n\otimes_{\mathbf Z}B^\vee\cong(\mathbf Z/n\mathbf Z)\otimes_{\mathbf Z}B^\vee \cong B^\vee/nB^\vee=B^\vee\).
+
+Combining this with the Kummer pairing gives
+
+\(\operatorname{Gal}(K_n/K)
+\cong
+\operatorname{Hom}_{\mathbf Z}(B,\mu_n)
+\cong
+B^\vee\).
+
+Thus, after choosing an identification \(\mu_n\cong\mathbf Z/n\mathbf Z\),
+
+\[
+\boxed{
+\operatorname{Gal}(K_n/K)
+\cong
+\left(K^\times/(K^\times)^n\right)^\vee.
+}
+\]
+
+The last isomorphism is noncanonical because it depends on the choice of a primitive \(n\)-th root of unity. The more intrinsic statement is
+
+\(\operatorname{Gal}(K_n/K)
+\cong
+\operatorname{Hom}_{\mathbf Z}(K^\times/(K^\times)^n,\mu_n)\). This is essentially taking inverse limit over all finite subgroup of \(K^\times/(K^\times)^n\).
+
 ## 18. Cyclic extensions as the rank-one case
 
 Suppose \(D\) is cyclic:
@@ -645,7 +1018,7 @@ What initially looked like the elementary statement
 \[
 K=F(\sqrt[n]{a})
 \]
-is therefore the rank-one shadow of a broader duality:
+is therefore the rank-one case of a broader duality:
 \[
 \boxed{\text{finite subgroups of }F^\times/(F^\times)^n
 \quad\longleftrightarrow\quad
@@ -657,107 +1030,8 @@ The bridge between the two sides is the deceptively simple expression
 \]
 That expression first appeared when we studied a single cyclic extension, reappeared as the connecting homomorphism in the Kummer exact sequence, and finally became the perfect pairing underlying the general theory.
 
-Perhaps that is the main point of Kummer theory: adjoining radicals and taking characters of the absolute Galois group are not two unrelated constructions. Once the required roots of unity are present, they are two descriptions of the same arithmetic phenomenon.
+One sees that the main point of Kummer theory: adjoining radicals and taking characters of the absolute Galois group are not two unrelated constructions. Once the required roots of unity are present, they are two descriptions of the same arithmetic phenomenon.
 
-## 19.  A final glimpse toward class field theory
-
-There is a striking resemblance between the picture above and local class field theory.
-
-Let \(K\) now be a local field. Local class field theory provides the reciprocity map
-
-\[
-\operatorname{rec}_K:K^\times\longrightarrow
-\operatorname{Gal}(K^{\mathrm{ab}}/K),
-\]
-
-and for every finite abelian extension \(L/K\) it induces an isomorphism
-
-\[
-\boxed{
-K^\times/N_{L/K}(L^\times)
-\;\simeq\;
-\operatorname{Gal}(L/K).
-}
-\]
-
-Thus finite abelian extensions of \(K\) are encoded by open subgroups of finite index in \(K^\times\), namely the norm groups
-
-\[
-N_{L/K}(L^\times).
-\]
-
-Notice the similarity with Kummer theory. When \(\mu_n\subset K\), a cyclic extension
-
-\[
-L=K(\sqrt[n]{a})
-\]
-
-is described by a Kummer character
-
-\[
-c_a:G_K\longrightarrow\mu_n,
-\qquad
-c_a(\sigma)=
-\frac{\sigma(\sqrt[n]{a})}{\sqrt[n]{a}}.
-\]
-
-The extension is determined by the kernel of this character. Local class field theory gives another description of the same extension: it corresponds to the norm subgroup
-
-\[
-N_{L/K}(L^\times)\subset K^\times,
-\]
-
-and
-
-\[
-K^\times/N_{L/K}(L^\times)
-\simeq
-\operatorname{Gal}(L/K).
-\]
-
-So in Kummer theory we describe an abelian extension by a character of the absolute Galois group, while local class field theory turns the picture around and replaces the abelianized Galois group by the much more concrete multiplicative group \(K^\times\).
-
-There is an even closer connection. If \(\mu_n\subset K\), the \(n\)-th Hilbert symbol gives a pairing
-
-\[
-(\ ,\ )_n:
-K^\times/(K^\times)^n
-\times
-K^\times/(K^\times)^n
-\longrightarrow
-\mu_n.
-\]
-
-For
-
-\[
-L=K(\sqrt[n]{a}),
-\]
-
-the map
-
-\[
-b\longmapsto(a,b)_n
-\]
-
-is a character of \(K^\times\), and its kernel is precisely
-
-\[
-N_{L/K}(L^\times).
-\]
-
-Thus
-
-\[
-\boxed{
-b\in N_{L/K}(L^\times)
-\iff
-(a,b)_n=1.
-}
-\]
-
-This gives a beautiful bridge between the two theories: the Kummer class of \(a\) determines the extension \(L/K\), while local class field theory identifies exactly which elements of \(K^\times\) are norms from that extension.
-
-In this sense, the Kummer pairing we have just studied is already a first glimpse of the reciprocity and duality phenomena that lie at the heart of local class field theory.
+Kummer theory may be viewed as a first step toward class field theory, whose aim is to describe and classify the abelian extensions of local and global fields.
 
 
